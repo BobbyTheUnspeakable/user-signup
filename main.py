@@ -6,6 +6,7 @@ app.config['DEBUG'] = True
 
 @app.route("/")
 def index():
+    sign_in = request.form('sign-in.html')
     return render_template('sign-in.html')
 
 app.run()
