@@ -1,15 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form action="/" method="POST">
+    <form action="/welcome.html" method="POST">
         <label for="username">Username</label>
-            <input type="text" name="username"><br>
+            <input type="text" name="username">
+            <span class="error"></span><br>
         <label for="pword">Password</label>
-            <input type="password" name="pword"><br>
+            <input type="password" name="pword">
+            <span class="error"></span><br>
         <label for="verpword">Verify Password</label>
-            <input type="password" name="verpword"><br>
+            <input type="password" name="verpword">
+            <span class="error"></span><br>
         <label for="email">Email (optional)</label>
-            <input type="text" name="email"><br>
+            <input type="text" name="email">
+            <span class="error"></span><br>
         <input type="submit" value="Submit"><br>
     </form>
+{% if error %}
+  <p class='error'>{{ error }}</p>
+{% endif %}
 {% endblock %}
