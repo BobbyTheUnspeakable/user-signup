@@ -4,13 +4,18 @@ import os
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
+def validate(string):
+    if len(string) < 3 or len(string) > 20:
+        return False
+    else:
+        return True
+
 @app.route("/", methods=["POST", "GET"])
 def index():
-    encoded_error = request.args.get("error")
     
-    return render_template('sign-in.html', error=encoded_error)
+    return render_template('sign-in.html') 
 
-@app.route("/welcome.html", methods=['POST'])
+@app.route("/welcome.html", methods=['POST', "GET"])
 def welcome():
     username = str(request.form.get('username'))
     password = str(request.form.get('pword'))
@@ -18,37 +23,33 @@ def welcome():
     email = str(request.form.get('email'))
     list_email = list(email)
 
+    if validate(username) == False:
+        user_error = "Usernames should be between 3 and 20 characters"
+        return redirect("/?error=" + user_error)
     if username.isalnum() == False:
         user_error = "Username cannot contain spaces."
         return redirect("/?error=" + user_error)
-    if len(username) < 3:
-        user_error = "That username is too short"
-        return redirect("/?error=" + user_error)
-    if len(username) > 20:
-        user_error = "That username is too long"
-        return redirect("/?error=" + user_error)
+
+    if validate(password) == False:
+        pw_error = "Passwords should be between 3 and 20 characters"
+        return redirect("/?error=" + pw_error)
     if password.isalnum() == False:
         pw_error = "Password cannot contain spaces."
         return redirect("/?error=" + pw_error)
-    if len(password) < 3:
-        pw_error = "That password is too short"
-        return redirect("/?error=" + pw_error)
-    if len(password) > 20:
-        pw_error = "That password is too long"
-        return redirect("/?error=" + pw_error)
+
     if verified_password != password:
         vpw_error = "Passwords do not match"
         return redirect("/?error=" + vpw_error)
+
     if email != '':
-        if len(email) < 3:
-            email_error = "That email is too short"
-            return redirect("/?error=" + email_error)
-        if len(email) > 20:
-            email_error = "That email is too long"
-            return redirect("/?error=" + email_error)
+        if validate(email) == False:
+            email_error = "emails should be between 3 and 20 characters"
+            return redirect('/?error=' + email_error)
         if ('@' not in list_email) == True and ('.' not in list_email) == True:
             email_error = "Not a valid email"
             return redirect('/?error=' + email_error)
 
     return render_template('welcome.html', username = username)
+    #user_error=user_error, pw_error=pw_error, vpw_error=vpw_error,
+     #email_error=email_error)
 app.run()
